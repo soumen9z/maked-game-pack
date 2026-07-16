@@ -1,0 +1,1110 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<title>カラオケガチャ</title>
+
+<style>
+body {
+    text-align: center;
+    font-family: "Noto Sans JP", sans-serif;
+    margin-top: 80px;
+    min-height: 100vh;
+
+    /* 背景 */
+    background: linear-gradient(
+        135deg,
+        #667eea,
+        #764ba2
+    );
+
+    color: white;
+}
+
+
+/* タイトル */
+h1 {
+    font-size: 40px;
+    text-shadow: 2px 2px 5px rgba(0,0,0,0.3);
+}
+
+
+/* コメント表示部分 */
+#comment {
+    background: rgba(255,255,255,0.9);
+    color: #333;
+
+    width: 70%;
+    max-width: 700px;
+
+    margin: 40px auto;
+    padding: 30px;
+
+    border-radius: 20px;
+
+    font-size: 26px;
+
+    box-shadow:
+        0 10px 25px rgba(0,0,0,0.2);
+}
+
+
+/* ボタン */
+button {
+    font-size: 18px;
+
+    padding: 12px 30px;
+
+    margin: 10px;
+
+    border: none;
+    border-radius: 30px;
+
+    background: #ffcc70;
+    color: #333;
+
+    cursor: pointer;
+
+    transition: 0.3s;
+
+    box-shadow:
+        0 5px 10px rgba(0,0,0,0.2);
+}
+
+
+/* マウスを乗せた時 */
+button:hover {
+
+    transform: translateY(-3px);
+
+    background: #ffd98e;
+
+    box-shadow:
+        0 8px 15px rgba(0,0,0,0.3);
+}
+
+
+/* 一覧表示 */
+#commentList {
+
+    background: rgba(255,255,255,0.9);
+
+    color:#333;
+
+    width:70%;
+    max-width:700px;
+
+    margin:30px auto;
+
+    padding:20px;
+
+    border-radius:20px;
+
+    text-align:left;
+
+    box-shadow:
+        0 10px 25px rgba(0,0,0,0.2);
+}
+</style>
+
+</head>
+
+<body>
+
+<h1>カラオケガチャ</h1>
+<h2>カラオケで歌う曲が見つからないときにどうぞ</h2>
+<h3>※登録楽曲は製作者の好みで選ばれています</h3>
+<h3>※表示された曲が歌えるかどうかはカラオケの機種によります</h3>
+
+<div id="comment">
+    ボタンを押してください
+</div>
+
+<button onclick="showRandomComment()">
+    ランダム表示
+</button>
+
+<button onclick="showAllComments()">
+    登録楽曲一覧表示
+</button>
+<button onclick="showSongCount()">
+    登録曲数表示
+</button>
+<button onclick="setExcludedArtists()">
+    除外アーティスト設定
+</button>
+
+
+<div id="commentList"></div>
+<div id="excludeList"></div>
+
+
+<script>
+
+
+
+
+
+// コメントを追加するときはここに追加するだけ
+const comments = [
+    {
+        title: "ハルディンホテル",
+        artist: "平沢進"
+    },
+    {
+        title: "救済の技法",
+        artist: "平沢進"
+    },
+    {
+        title: "kingdom",
+        artist: "平沢進"
+    },
+    {
+        title: "バンディリア旅行団",
+        artist: "平沢進"
+    },
+    {
+        title: "夢見る機械",
+        artist: "平沢進"
+    },
+    {
+        title: "空転G",
+        artist: "平沢進"
+    },
+    {
+        title: "アディオス",
+        artist: "平沢進"
+    },
+    {
+        title: "アヴァター・アローン",
+        artist: "平沢進"
+    },
+    {
+        title: "嵐の海",
+        artist: "平沢進"
+    },
+    {
+        title: "Amputeeガーベラ",
+        artist: "平沢進"
+    },
+    {
+        title: "Archetype Engine",
+        artist: "平沢進"
+    },
+    {
+        title: "オーロラ",
+        artist: "平沢進"
+    },
+    {
+        title: "回路OFF 回路ON",
+        artist: "平沢進"
+    },
+    {
+        title: "カウボーイとインディアン",
+        artist: "平沢進"
+    },
+    {
+        title: "確率の丘",
+        artist: "平沢進"
+    },
+    {
+        title: "可視海",
+        artist: "平沢進"
+    },
+    {
+        title: "舵をとれ",
+        artist: "平沢進"
+    },
+    {
+        title: "風の分身",
+        artist: "平沢進"
+    },
+    {
+        title: "環太平洋擬装網",
+        artist: "平沢進"
+    },
+    {
+        title: "消えるTOPIA",
+        artist: "平沢進"
+    },
+    {
+        title: "記憶のBEACON",
+        artist: "平沢進"
+    },
+    {
+        title: "Caravan",
+        artist: "平沢進"
+    },
+    {
+        title: "金星",
+        artist: "平沢進"
+    },
+    {
+        title: "QUIT",
+        artist: "平沢進"
+    },
+    {
+        title: "賢者のプロペラ",
+        artist: "平沢進"
+    },
+    {
+        title: "現象の花の秘密",
+        artist: "平沢進"
+    },
+    {
+        title: "高貴な城",
+        artist: "平沢進"
+    },
+    {
+        title: "コヨーテ",
+        artist: "平沢進"
+    },
+    {
+        title: "Colony",
+        artist: "平沢進"
+    },
+    {
+        title: "CODE-COSTARICA",
+        artist: "平沢進"
+    },
+    {
+        title: "サイレン *Siren*",
+        artist: "平沢進"
+    },
+    {
+        title: "時間の西方",
+        artist: "平沢進"
+    },
+    {
+        title: "Σ星のシダ",
+        artist: "平沢進"
+    },
+    {
+        title: "静かの海",
+        artist: "平沢進"
+    },
+    {
+        title: "上空初期値",
+        artist: "平沢進"
+    },
+    {
+        title: "SWITCHED-ON LOTUS",
+        artist: "平沢進"
+    },
+    {
+        title: "Siren *セイレーン*",
+        artist: "平沢進"
+    },
+    {
+        title: "世界タービン",
+        artist: "平沢進"
+    },
+    {
+        title: "狙撃手",
+        artist: "平沢進"
+    },
+    {
+        title: "祖父なる風",
+        artist: "平沢進"
+    },
+    {
+        title: "TIMELINEの終わり",
+        artist: "平沢進"
+    },
+    {
+        title: "TOWN-0 PHASE-5",
+        artist: "平沢進"
+    },
+    {
+        title: "月の影",
+        artist: "平沢進"
+    },
+    {
+        title: "テクノの娘",
+        artist: "平沢進"
+    },
+    {
+        title: "鉄切り歌 (鉄山を登る男)",
+        artist: "平沢進"
+    },
+    {
+        title: "電光浴",
+        artist: "平沢進"
+    },
+    {
+        title: "ナーシサス次元から来た人",
+        artist: "平沢進"
+    },
+    {
+        title: "Nurse Cafe",
+        artist: "平沢進"
+    },
+    {
+        title: "ニグレド(黒化)",
+        artist: "平沢進"
+    },
+    {
+        title: "庭師KING",
+        artist: "平沢進"
+    },
+    {
+        title: "脳動説",
+        artist: "平沢進"
+    },
+    {
+        title: "パレード",
+        artist: "平沢進"
+    },
+    {
+        title: "ヴァーチュアル・ラビット",
+        artist: "平沢進"
+    },
+    {
+        title: "白虎野の娘",
+        artist: "平沢進"
+    },
+    {
+        title: "BEACON",
+        artist: "平沢進"
+    },
+    {
+        title: "Phonon Belt",
+        artist: "平沢進"
+    },
+    {
+        title: "フローズン・ビーチ",
+        artist: "平沢進"
+    },
+    {
+        title: "MOTHER",
+        artist: "平沢進"
+    },
+    {
+        title: "Mermaid Song",
+        artist: "平沢進"
+    },
+    {
+        title: "Mirror Gate",
+        artist: "平沢進"
+    },
+    {
+        title: "MURAMASA",
+        artist: "平沢進"
+    },
+    {
+        title: "燃える花の隊列",
+        artist: "平沢進"
+    },
+    {
+        title: "LOVE SONG",
+        artist: "平沢進"
+    },
+    {
+        title: "ロタティオン(LOTUS-2)",
+        artist: "平沢進"
+    },
+    {
+        title: "Lotus",
+        artist: "平沢進"
+    },
+
+//###########
+
+    {
+        title: "Another Day",
+        artist: "P-model"
+    },
+    {
+        title: "ENOLA",
+        artist: "P-model"
+    },
+    {
+        title: "LAYER-GREEN",
+        artist: "P-model"
+    },
+    {
+        title: "サイボーグ",
+        artist: "P-model"
+    },
+    {
+        title: "WIRE SELF",
+        artist: "P-model"
+    },
+    {
+        title: "回収船",
+        artist: "P-model"
+    },
+    {
+        title: "Welcome",
+        artist: "P-model"
+    },
+    {
+        title: "おやすみDOG",
+        artist: "P-model"
+    },
+    {
+        title: "OH MAMA!",
+        artist: "P-model"
+    },
+    {
+        title: "COLORS",
+        artist: "P-model"
+    },
+    {
+        title: "Cluster",
+        artist: "P-model"
+    },
+    {
+        title: "Chevron",
+        artist: "P-model"
+    },
+    {
+        title: "時間等曲率漏斗館へようこそ",
+        artist: "P-model"
+    },
+    {
+        title: "JULIA BIRD",
+        artist: "P-model"
+    },
+    {
+        title: "SPEED TUBE",
+        artist: "P-model"
+    },
+    {
+        title: "Zebra",
+        artist: "P-model"
+    },
+    {
+        title: "Zombi",
+        artist: "P-model"
+    },
+    {
+        title: "DUSToidよ歩行は快適か?",
+        artist: "P-model"
+    },
+    {
+        title: "2D OR NOT 2D",
+        artist: "P-model"
+    },
+    {
+        title: "NO ROOM",
+        artist: "P-model"
+    },
+    {
+        title: "Biiig Eye",
+        artist: "P-model"
+    },
+    {
+        title: "ヘルス・エンジェル",
+        artist: "P-model"
+    },
+    {
+        title: "MOMO色トリック",
+        artist: "P-model"
+    },
+    {
+        title: "夢見る力に",
+        artist: "P-model"
+    },
+    {
+        title: "LEAK",
+        artist: "P-model"
+    },
+    {
+        title: "Rocket Shoot II",
+        artist: "P-model"
+    },
+
+//###########
+
+    {
+        title: "アンチモネシア",
+        artist: "核P-model"
+    },
+    {
+        title: "巡行プシクラオン",
+        artist: "核P-model"
+    },
+    {
+        title: "崇めよ我はTVなり",
+        artist: "核P-model"
+    },
+    {
+        title: "Alarm",
+        artist: "核P-model"
+    },
+    {
+        title: "暗黒πドゥアイ",
+        artist: "核P-model"
+    },
+    {
+        title: "アンチ・ビストロン",
+        artist: "核P-model"
+    },
+    {
+        title: "ECHO-233",
+        artist: "核P-model"
+    },
+    {
+        title: "гипноза (Gipnoza)",
+        artist: "核P-model"
+    },
+    {
+        title: "遮眼大師",
+        artist: "核P-model"
+    },
+    {
+        title: "白く巨大で",
+        artist: "核P-model"
+    },
+    {
+        title: "Timelineの始まり",
+        artist: "核P-model"
+    },
+    {
+        title: "Timelineの東",
+        artist: "核P-model"
+    },
+    {
+        title: "排時光",
+        artist: "核P-model"
+    },
+    {
+        title: "バイバイ Halycon",
+        artist: "核P-model"
+    },
+    {
+        title: "ハルディンドーム",
+        artist: "核P-model"
+    },
+    {
+        title: "パルテノン",
+        artist: "核P-model"
+    },
+    {
+        title: "ビストロン",
+        artist: "核P-model"
+    },
+    {
+        title: "Big Brother",
+        artist: "核P-model"
+    },
+    {
+        title: "109号区の氾濫",
+        artist: "核P-model"
+    },
+    {
+        title: "HUMAN-LE",
+        artist: "核P-model"
+    },
+    {
+        title: "Phase-0",
+        artist: "核P-model"
+    },
+
+//###########
+
+    {
+        title: "Ruktun or Die",
+        artist: "宮村優子"
+    },
+
+//###########
+
+    {
+        title: "エンターテイナー",
+        artist: "オーイシマサヨシ"
+    },
+    {
+        title: "uni-verse",
+        artist: "オーイシマサヨシ"
+    },
+    {
+        title: "メガネゴーラウンド",
+        artist: "オーイシマサヨシ"
+    },
+    {
+        title: "なまらめんこいギャル",
+        artist: "オーイシマサヨシ"
+    },
+    {
+        title: "オトモダチフィルム",
+        artist: "オーイシマサヨシ"
+    },
+    {
+        title: "かごめかごめ",
+        artist: "オーイシマサヨシ"
+    },
+    {
+        title: "君じゃなきゃダメみたい",
+        artist: "オーイシマサヨシ"
+    },
+    {
+        title: "ギフト",
+        artist: "オーイシマサヨシ"
+    },
+    {
+        title: "L'oN",
+        artist: "オーイシマサヨシ"
+    },
+    {
+        title: "あとの祭り",
+        artist: "オーイシマサヨシ"
+    },
+    {
+        title: "ギャンブリングホール",
+        artist: "オーイシマサヨシ"
+    },
+    {
+        title: "エレクトリックパレード",
+        artist: "オーイシマサヨシ"
+    },
+    {
+        title: "僕らの箱庭",
+        artist: "オーイシマサヨシ"
+    },
+    {
+        title: "黄金航路",
+        artist: "オーイシマサヨシ"
+    },
+    {
+        title: "キンカンのうた 2020",
+        artist: "オーイシマサヨシ"
+    },
+    {
+        title: "好きになっちゃダメな人",
+        artist: "オーイシマサヨシ"
+    },
+    {
+        title: "世界が君を必要とする時が来たんだ",
+        artist: "オーイシマサヨシ"
+    },
+    {
+        title: "ニンゲン",
+        artist: "オーイシマサヨシ"
+    },
+    {
+        title: "MANKAI☆開花宣言",
+        artist: "オーイシマサヨシ"
+    },
+    {
+        title: "学園都市",
+        artist: "オーイシマサヨシ"
+    },
+    {
+        title: "ロールプレイング",
+        artist: "オーイシマサヨシ"
+    },
+
+//###########
+
+    {
+        title: "枕男子",
+        artist: "めりぃ(CV:花江夏樹)"
+    },
+    
+//###########
+
+    {
+        title: "ドラゴンエネルギー",
+        artist: "オーイシマサヨシ x 加藤純一"
+    },
+
+//###########
+
+    {
+        title: "米",
+        artist: "MOROHA"
+    },
+    {
+        title: "革命",
+        artist: "MOROHA"
+    },
+    {
+        title: "三文銭",
+        artist: "MOROHA"
+    },
+    {
+        title: "五文銭",
+        artist: "MOROHA"
+    },
+    {
+        title: "六文銭",
+        artist: "MOROHA"
+    },
+    {
+        title: "ストロンガー",
+        artist: "MOROHA"
+    },
+    {
+        title: "やめるなら今だ",
+        artist: "MOROHA"
+    },
+    {
+        title: "tomorrow",
+        artist: "MOROHA"
+    },
+    {
+        title: "奮い立つCDショップにて",
+        artist: "MOROHA"
+    },
+
+//###########
+
+    {
+        title: "ウェカピポ",
+        artist: "SOUL'd OUT"
+    },
+    {
+        title: "Magenta Magenta",
+        artist: "SOUL'd OUT"
+    },
+    {
+        title: "COSMIC TRAVEL",
+        artist: "SOUL'd OUT"
+    },
+
+//###########
+
+    {
+        title: "爆走夢歌",
+        artist: "Diggy-MO"
+    },
+    {
+        title: "JUVES",
+        artist: "Diggy-MO"
+    },
+
+//###########
+
+    {
+        title: "オトノケ",
+        artist: "Creepy Nuts"
+    },
+    {
+        title: "Bling-Bang-Bang-Born",
+        artist: "Creepy Nuts"
+    },
+    {
+        title: "眠れ",
+        artist: "Creepy Nuts"
+    },
+    {
+        title: "doppelganger",
+        artist: "Creepy Nuts"
+    },
+
+//###########
+
+    {
+        title: "PRESIDENT",
+        artist: "Daito Music"
+    },
+
+//###########
+
+    {
+        title: "恋心",
+        artist: "B'z"
+    },
+    {
+        title: "愛のバクダン",
+        artist: "B'z"
+    },
+    {
+        title: "ユートピア",
+        artist: "B'z"
+    },
+    {
+        title: "イチブトゼンブ",
+        artist: "B'z"
+    },
+    {
+        title: "OCEAN",
+        artist: "B'z"
+    },
+    {
+        title: "衝動",
+        artist: "B'z"
+    },
+    {
+        title: "有頂天",
+        artist: "B'z"
+    },
+
+//###########
+
+    {
+        title: "小さな恋のうた",
+        artist: "MONGOL800"
+    },
+
+//###########
+
+    {
+        title: "TOUGHT BOY",
+        artist: "TOM・CAT"
+    },
+];
+
+
+
+
+
+
+
+// 除外するアーティスト
+let excludedArtists = [];
+
+
+// ランダム表示
+function showRandomComment() {
+
+// 除外されていない曲だけ取得
+const availableSongs = comments.filter(song =>
+    !excludedArtists.includes(song.artist)
+);
+
+
+// 全部除外された場合
+if (availableSongs.length === 0) {
+
+    document.getElementById("comment").textContent =
+        "選択できる曲がありません";
+
+    return;
+}
+
+
+const randomIndex = Math.floor(Math.random() * availableSongs.length);
+
+const song = availableSongs[randomIndex];
+
+    document.getElementById("comment").textContent =
+        song.title + " / " + song.artist;
+
+
+    // 一覧を消す
+    document.getElementById("commentList").innerHTML = "";
+}
+
+
+// アーティストごとの一覧表示
+function showAllComments() {
+
+
+    // アーティスト名ごとに分類
+    const artistGroups = {};
+
+
+    comments.forEach(song => {
+
+        if (!artistGroups[song.artist]) {
+            artistGroups[song.artist] = [];
+        }
+
+        artistGroups[song.artist].push(song.title);
+
+    });
+
+
+    // アーティスト名順
+const sortedArtists = Object.keys(artistGroups).sort((a, b) => {
+
+    const aIsEnglish = /^[A-Za-z]/.test(a);
+    const bIsEnglish = /^[A-Za-z]/.test(b);
+
+
+    // 日本語を先にする
+    if (aIsEnglish && !bIsEnglish) {
+        return 1;
+    }
+
+    if (!aIsEnglish && bIsEnglish) {
+        return -1;
+    }
+
+
+    // 同じ種類なら日本語順・アルファベット順
+    return a.localeCompare(b, "ja");
+
+});
+
+
+    let html = "";
+
+
+    sortedArtists.forEach(artist => {
+
+        html += `<h3>${artist}</h3>`;
+
+        html += "<ol>";
+
+        artistGroups[artist]
+            .sort((a,b) => a.localeCompare(b,"ja"))
+            .forEach(title => {
+
+                html += `<li>${title}</li>`;
+
+            });
+
+        html += "</ol>";
+
+    });
+
+
+    document.getElementById("commentList").innerHTML = html;
+
+}
+
+// 曲数表示
+function showSongCount() {
+
+    const count = comments.length;
+
+    document.getElementById("comment").textContent =
+        "現在の登録曲数は " + count + " 曲です";
+
+    // 一覧を消す
+    document.getElementById("commentList").innerHTML = "";
+}
+
+function setExcludedArtists() {
+
+// アーティストごとの曲数を数える
+    const artistCounts = {};
+
+    comments.forEach(song => {
+
+        if (!artistCounts[song.artist]) {
+            artistCounts[song.artist] = 0;
+        }
+
+        artistCounts[song.artist]++;
+
+    });
+
+
+    // 曲数が多い順に並べる
+    const artists = Object.keys(artistCounts).sort((a, b) => {
+
+        return artistCounts[b] - artistCounts[a];
+
+    });
+
+
+    let html = "<h3>ランダムから除外するアーティスト</h3>";
+
+    html += `
+    <button onclick="checkAllArtists()">
+        すべて選択
+    </button>
+
+    <button onclick="uncheckAllArtists()">
+        すべて解除
+    </button>
+
+    <br><br>
+    `;
+
+
+    artists.forEach(artist => {
+
+        const checked =
+            excludedArtists.includes(artist)
+            ? "checked"
+            : "";
+
+
+        html += `
+        <label>
+            <input 
+                type="checkbox"
+                value="${artist}"
+                ${checked}
+                onchange="updateExcludedArtists()"
+            >
+            ${artist}（${artistCounts[artist]}曲）
+        </label>
+        <br>
+        `;
+
+    });
+
+
+    document.getElementById("excludeList").innerHTML = html;
+
+    // 楽曲一覧を閉じる
+    document.getElementById("commentList").innerHTML = "登録曲数で偏りが生まれてしまいますが、アーティストを除外することでカスタマイズできます";
+}
+
+
+function updateExcludedArtists() {
+
+    const checkboxes =
+        document.querySelectorAll(
+            "#excludeList input[type='checkbox']"
+        );
+
+
+    excludedArtists = [];
+
+
+    checkboxes.forEach(box => {
+
+        if (box.checked) {
+
+            excludedArtists.push(box.value);
+
+        }
+
+    });
+
+}
+
+// すべて選択
+function checkAllArtists() {
+
+    const checkboxes =
+        document.querySelectorAll(
+            "#excludeList input[type='checkbox']"
+        );
+
+
+    checkboxes.forEach(box => {
+
+        box.checked = true;
+
+    });
+
+
+    updateExcludedArtists();
+
+}
+
+
+
+// すべて解除
+function uncheckAllArtists() {
+
+    const checkboxes =
+        document.querySelectorAll(
+            "#excludeList input[type='checkbox']"
+        );
+
+
+    checkboxes.forEach(box => {
+
+        box.checked = false;
+
+    });
+
+
+    updateExcludedArtists();
+
+}
+
+</script>
+
+</body>
+</html>
