@@ -1,0 +1,1839 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<title>数字推理バトル</title>
+
+<style>
+/* ===============================
+   基本デザイン
+================================ */
+
+body {
+    font-family: sans-serif;
+    background: linear-gradient(
+        120deg,
+        #ffe1e1,
+        #ffb3b3,
+        #ff8f8f
+    );
+    text-align: center;
+    padding: 30px;
+    min-height: 100vh;
+}
+
+#game {
+    background: white;
+    max-width: 600px;
+    margin: auto;
+    padding: 30px;
+    border-radius: 15px;
+    box-shadow: 0 0 15px #aaa;
+}
+
+button {
+    font-size: 18px;
+    padding: 12px 25px;
+    margin: 8px;
+    cursor: pointer;
+    border-radius: 8px;
+    border: none;
+    background: #e85d75;
+    color: white;
+}
+
+button:hover {
+    background: #c94b8a;
+}
+
+input {
+    font-size: 20px;
+    width: 100px;
+    text-align: center;
+}
+
+.questionButton {
+    display: block;
+    width: 80%;
+    margin: 10px auto;
+}
+
+.history {
+    text-align: left;
+    background: #eee;
+    padding: 10px;
+    margin-top:20px;
+}
+
+.hidden {
+    display:none;
+}
+
+.answerButton {
+    width:120px;
+}
+
+/* CPU推理ゲージ */
+
+.thinking-area {
+
+    margin:20px;
+    padding:15px;
+    background:#eeeeee;
+    border-radius:10px;
+
+}
+
+
+.gauge {
+
+    width:90%;
+    height:25px;
+    background:#ccc;
+    border-radius:20px;
+    margin:auto;
+    overflow:hidden;
+
+}
+
+
+.gauge-inner {
+
+    height:100%;
+    background:linear-gradient(
+        90deg,
+        #4caf50,
+        #2196f3
+    );
+
+}
+
+.history-container {
+
+    display:flex;
+    gap:20px;
+    margin-top:20px;
+
+}
+
+
+.history-box {
+
+    flex:1;
+    background:#eee;
+    padding:15px;
+    border-radius:10px;
+    text-align:left;
+
+}
+
+
+.history-title {
+
+    text-align:center;
+    font-weight:bold;
+    margin-bottom:10px;
+
+}
+
+</style>
+
+</head>
+
+
+<body>
+
+<div id="game">
+
+<h1>数字推理バトル</h1>
+
+<div id="screen"></div>
+
+</div>
+
+
+
+<script>
+
+
+// =================================================
+// 質問データ
+//
+// ★質問を追加するときはここに追加してください
+//
+// check:
+// 数字を受け取り、Yesならtrue、Noならfalseを返す
+// =================================================
+
+const questions = [
+
+    {
+        text:"50以上ですか？",
+        check:number => number >= 50
+    },
+
+    {
+        text:"偶数ですか？",
+        check:number => number % 2 === 0
+    },
+
+    {
+        text:"素数ですか？",
+        check:number => isPrime(number)
+    },
+
+    {
+        text:"3の倍数ですか？",
+        check:number => number % 3 === 0
+    },
+
+    {
+        text:"5の倍数ですか？",
+        check:number => number % 5 === 0
+    },
+
+    {
+        text:"10以上ですか？",
+        check:number => number >= 10
+    },
+    
+    {
+        text:"25以上ですか？",
+        check:number => number >= 25
+    },
+
+    {
+        text:"75以上ですか？",
+        check:number => number >= 75
+    },
+
+    {
+        text:"90以上ですか？",
+        check:number => number >= 90
+    },
+
+    {
+        text:"7の倍数ですか？",
+        check:number => number % 7 === 0
+    },
+
+    {
+        text:"30以上ですか？",
+        check:number => number >= 30
+    },
+
+    {
+        text:"70以上ですか？",
+        check:number => number >= 70
+    },
+
+    {
+        text:"1の位は5以上ですか？",
+        check:number => (number % 10) >= 5
+    },
+
+    {
+        text:"33以下ですか？",
+        check:number => number <= 33
+    },
+
+    {
+        text:"66以下ですか？",
+        check:number => number <= 66
+    },
+
+    {
+        text:"4の倍数ですか？",
+        check:number => number % 4 === 0
+    },
+
+    {
+        text:"8の倍数ですか？",
+        check:number => number % 8 === 0
+    },
+
+    {
+        text:"9の倍数ですか？",
+        check:number => number % 9 === 0
+    },
+
+    {
+        text:"6の倍数ですか？",
+        check:number => number % 6 === 0
+    },
+
+    {
+        text:"33以下ですか？",
+        check:number => number <= 33
+    },
+
+    {
+        text:"66以下ですか？",
+        check:number => number <= 66
+    },
+
+    {
+        text:"平方数ですか？",
+        check:number => 
+        Math.sqrt(number)%1===0
+    },
+
+    {
+        text:"1の位は3以上ですか？",
+        check:number => (number % 10) >= 3
+    },
+
+    {
+        text:"1の位は7以上ですか？",
+        check:number => (number % 10) >= 7
+    },
+
+    {
+        text:"11の倍数ですか？",
+        check:number => number % 11 === 0
+    },
+
+    {
+        text:"13の倍数ですか？",
+        check:number => number % 13 === 0
+    },
+
+    {
+        text:"17の倍数ですか？",
+        check:number => number % 17 === 0
+    },
+
+    {
+        text:"19の倍数ですか？",
+        check:number => number % 19 === 0
+    },
+];
+
+
+
+
+// =================================================
+// ゲーム変数
+// =================================================
+
+
+let playerNumber = null; 
+// プレイヤーの数字
+// 通常プレイ中はnullのまま
+
+
+let cpuNumber = 0;
+
+
+let difficulty = "easy";
+
+
+let turn = "player";
+
+
+// CPUが考えているプレイヤー候補
+
+let cpuCandidates = [];
+
+
+// 現在表示中の質問候補3つ
+
+let availableQuestions = [];
+
+
+// 質問履歴
+
+let history = [];
+let playerHistory = [];
+let cpuHistory = [];
+
+
+
+
+// =================================================
+// 初期画面
+// =================================================
+
+
+function startScreen(){
+
+    document.getElementById("screen").innerHTML = `
+
+    <p>
+    数字を当てられる前に数字を当てるゲームです！<br>
+    詳しいルールは下部のボタンをクリック！
+    </p>
+
+    <h2>ゲーム開始</h2>
+
+
+    <p>
+    1～99の数字を頭の中で決めてください。
+    </p>
+
+
+    <p>
+    コンピューター難易度
+    </p>
+
+
+    <label>
+    <input type="radio" name="difficulty" value="easy" checked>
+    EASY（ランダム質問）
+    </label>
+
+    <br>
+
+
+    <label>
+    <input type="radio" name="difficulty" value="hard">
+    HARD（最適質問）
+    </label>
+
+
+    <br><br>
+
+
+    <button onclick="startGame()">
+    ゲーム開始
+    </button>
+
+    <br>
+
+    <button onclick="showRule()">
+    ルール説明
+    </button>
+
+    `;
+
+}
+
+
+startScreen();
+
+
+// =================================================
+// ルール説明
+// =================================================
+
+function showRule(){
+
+
+document.getElementById("screen").innerHTML = `
+
+
+<h2>
+ルール説明
+</h2>
+
+
+<p>
+このゲームは1～99の数字を推理する対戦ゲームです。
+</p>
+
+
+<h3>
+ゲームの流れ
+</h3>
+
+
+<p>
+あなたとコンピューターはそれぞれ1つ数字を決めます。
+</p>
+
+
+<p>
+相手の数字を先に当てた方の勝利です。
+</p>
+
+
+<hr>
+
+
+<h3>
+ターンについて
+</h3>
+
+
+<p>
+自分のターンでは、
+</p>
+
+
+<p>
+・質問を選ぶ<br>
+・数字を当てる（チャレンジする）<br>
+・質問をパスして選択肢を入れ替える
+</p>
+
+
+<p>
+のどれか1つを行います。
+</p>
+
+
+<hr>
+
+
+<h3>
+質問について
+</h3>
+
+
+<p>
+質問にはYes / Noで答えます。
+</p>
+
+
+<p>
+選択した質問は消え、
+残りの質問＋新しい質問で次の選択肢になります。
+</p>
+
+
+<hr>
+
+
+<h3>
+勝敗について
+</h3>
+
+
+<p>
+相手の数字を当てれば勝利です。
+</p>
+
+
+<p>
+コンピューターがあなたの数字を特定すると敗北になります。
+</p>
+
+
+<p>
+<strong>ヒント：</strong><br>
+コンピューターは質問によって候補を絞り込み、<br>
+あなたの数字の候補が1つになるまでチャレンジしません。
+</p>
+
+
+<hr>
+
+
+<h3>
+矛盾が発生した場合
+</h3>
+
+
+<p>
+コンピューターの質問への回答によって、<br>
+1～99のどの数字であっても成立しなくなり、
+矛盾が生じることがあります。
+</p>
+
+
+<p>
+その場合、あなたは決めた数字を入力します。
+</p>
+
+
+<p>
+入力された数字をもとに、
+過去のコンピューターの質問と回答を確認します。
+</p>
+
+
+<p>
+矛盾していた場合その質問が表示され、
+あなたの敗北となります。
+</p>
+
+<hr>
+
+
+<button onclick="startScreen()">
+戻る
+</button>
+
+
+`;
+
+
+}
+
+
+// =================================================
+// ゲーム開始
+// =================================================
+
+
+function startGame(){
+
+
+    difficulty =
+    document.querySelector(
+        'input[name="difficulty"]:checked'
+    ).value;
+
+
+
+    cpuNumber =
+    Math.floor(Math.random()*99)+1;
+
+
+
+    cpuCandidates =
+    Array.from(
+        {length:99},
+        (_,i)=>i+1
+    );
+
+
+
+    availableQuestions =
+    createQuestionSet();
+
+
+
+    history=[];
+
+    playerHistory=[];
+    cpuHistory=[];
+
+    cpuQuestionHistory=[];
+
+    showPlayerTurn();
+
+
+}
+
+
+
+
+
+
+// =================================================
+// 質問3択作成
+// =================================================
+
+
+function createQuestionSet(){
+
+    let copy=[...questions];
+
+
+    let result=[];
+
+
+    while(result.length<5 && copy.length>0){
+
+        let index=
+        Math.floor(Math.random()*copy.length);
+
+
+        result.push(copy[index]);
+
+
+        copy.splice(index,1);
+
+    }
+
+
+    return result;
+
+}
+
+
+
+
+
+
+// =================================================
+// プレイヤーターン画面
+// =================================================
+
+
+function showPlayerTurn(){
+
+
+turn="player";
+
+
+let html=`
+
+
+<h2>あなたのターン</h2>
+
+
+<h3>質問を選択</h3>
+
+
+`;
+
+
+availableQuestions.forEach((q,index)=>{
+
+
+html+=`
+
+<button class="questionButton"
+onclick="playerAsk(${index})">
+
+${q.text}
+
+</button>
+
+`;
+
+});
+
+
+
+html+=`
+
+<h3>質問を入れ替えたい場合</h3>
+
+<button onclick="playerPass()">
+質問をパスする(質問総入れ替え)
+</button>
+
+<h3>または数字を回答</h3>
+
+
+<input id="challengeInput"
+type="number"
+min="1"
+max="99">
+
+
+<br>
+
+
+<button onclick="playerChallenge()">
+チャレンジ
+</button>
+
+
+
+
+`;
+
+
+
+document.getElementById("screen").innerHTML=html;
+
+
+}
+
+
+
+
+
+
+// =================================================
+// プレイヤー質問
+// =================================================
+
+
+function playerAsk(index){
+
+
+let q=
+availableQuestions[index];
+
+
+// 次回用質問更新
+
+replaceQuestion(index);
+
+
+
+let answer=
+q.check(cpuNumber);
+
+
+
+let result =
+q.text+
+"<br>答え："+
+(answer?"Yes":"No");
+
+
+history.push(
+"あなた: "+result
+);
+
+
+playerHistory.push(result);
+
+
+
+showCpuAnswer(
+q.text,
+answer
+);
+
+
+}
+
+
+function playerPass(){
+
+
+    availableQuestions =
+    createQuestionSet();
+
+
+    history.push(
+    "あなた: 質問をパス"
+    );
+
+
+    showNewQuestions();
+
+}
+
+
+// =================================================
+// パス後の新しい質問表示
+// =================================================
+
+function showNewQuestions(){
+
+
+let html = `
+
+
+<h2>
+質問を入れ替えました
+</h2>
+
+
+<p>
+次の質問候補です
+</p>
+
+
+
+`;
+
+
+availableQuestions.forEach(q=>{
+
+
+html += `
+
+<div>
+
+<button class="questionButton"
+disabled>
+
+${q.text}
+
+</button>
+
+</div>
+
+`;
+
+});
+
+
+html += `
+
+
+<button onclick="cpuTurn()">
+次へ
+</button>
+
+
+`;
+
+
+document.getElementById("screen").innerHTML = html;
+
+
+}
+
+
+
+function showCpuAnswer(text,answer){
+
+
+document.getElementById("screen").innerHTML=`
+
+<h2>コンピューターの回答</h2>
+
+
+<p>
+${text}
+</p>
+
+
+<h2>
+${answer?"Yes":"No"}
+</h2>
+
+
+<button onclick="cpuTurn()">
+次へ
+</button>
+
+
+`;
+
+}
+
+
+//////////////////////////////////
+// =================================================
+// 質問交換処理
+//
+// 選ばれた質問だけを新しい質問へ交換する
+// =================================================
+
+function replaceQuestion(index){
+
+    let newQuestion;
+
+    do {
+
+        newQuestion =
+        questions[
+            Math.floor(Math.random()*questions.length)
+        ];
+
+    } while(
+        availableQuestions.includes(newQuestion)
+    );
+
+
+    availableQuestions[index]=newQuestion;
+
+}
+
+
+
+
+
+
+// =================================================
+// CPUターン
+// =================================================
+
+
+function cpuTurn(){
+
+
+    // CPU候補が1個なら即チャレンジ
+
+    if(cpuCandidates.length===1){
+
+        cpuChallenge();
+
+        return;
+
+    }
+
+
+
+    showCpuQuestion();
+
+
+}
+
+
+
+
+
+
+// =================================================
+// CPU質問決定
+//
+// EASY:
+// ランダム
+//
+// HARD:
+// 最も候補を減らせる質問
+// =================================================
+
+
+function chooseCpuQuestion(){
+
+
+    if(difficulty==="easy"){
+
+
+        return Math.floor(
+            Math.random()*availableQuestions.length
+        );
+
+
+    }
+
+
+
+    // -------------------------------
+    // HARD処理
+    // -------------------------------
+
+
+    let bestIndex=0;
+
+    let bestScore=999;
+
+    let canProgress=false;
+
+
+    availableQuestions.forEach((q,index)=>{
+
+
+        let yes=0;
+        let no=0;
+
+
+        cpuCandidates.forEach(num=>{
+
+
+            if(q.check(num)){
+                yes++;
+            }
+            else{
+                no++;
+            }
+
+
+        });
+
+
+
+        // 最大側の候補数が少ないほど良い
+
+        let score=Math.max(yes,no);
+
+        if(score < cpuCandidates.length){
+
+            canProgress=true;
+
+        }
+
+
+
+        if(score < bestScore){
+
+            bestScore=score;
+            bestIndex=index;
+
+        }
+
+
+    });
+
+
+
+    if(!canProgress){
+
+        return -1;
+
+    }
+
+
+    return bestIndex;
+
+
+}
+
+
+
+
+
+
+// =================================================
+// CPU質問表示
+// =================================================
+
+
+function showCpuQuestion(){
+
+
+let index =
+chooseCpuQuestion();
+
+
+if(index === -1){
+
+    cpuPass();
+
+    return;
+
+}
+
+
+let q=
+availableQuestions[index];
+
+
+
+// 質問交換
+
+replaceQuestion(index);
+
+
+
+window.currentCpuQuestion=q;
+
+
+let rate =
+getCpuThinkingRate();
+
+document.getElementById("screen").innerHTML=`
+
+
+
+
+
+<h2>コンピューターからの質問</h2>
+
+<div class="thinking-area">
+
+<h3>
+コンピューター推理状況
+</h3>
+
+
+<div class="gauge">
+
+<div class="gauge-inner"
+style="width:${rate}%">
+
+</div>
+
+</div>
+
+
+<p>
+推理度 ${rate}%
+</p>
+
+
+</div>
+
+<h3>
+${q.text}
+</h3>
+
+
+<button class="answerButton"
+onclick="playerAnswer(true)">
+Yes
+</button>
+
+
+<button class="answerButton"
+onclick="playerAnswer(false)">
+No
+</button>
+
+
+`;
+
+}
+
+
+function cpuPass(){
+
+
+    availableQuestions =
+    createQuestionSet();
+
+
+    history.push(
+    "コンピューター: 質問をパス"
+    );
+
+
+    showCpuPassResult();
+
+}
+
+
+
+// =================================================
+// コンピューターパス後の新しい質問表示
+// =================================================
+
+function showCpuPassResult(){
+
+
+let html = `
+
+
+<h2>
+コンピューターが質問を入れ替えました
+</h2>
+
+
+<p>
+新しい質問候補です
+</p>
+
+
+
+`;
+
+
+availableQuestions.forEach(q=>{
+
+
+html += `
+
+<div>
+
+<button class="questionButton"
+disabled>
+
+${q.text}
+
+</button>
+
+</div>
+
+`;
+
+});
+
+
+
+html += `
+
+
+<button onclick="showPlayerTurn()">
+次へ
+</button>
+
+
+`;
+
+
+
+document.getElementById("screen").innerHTML = html;
+
+
+}
+
+
+// =================================================
+// プレイヤー回答
+// =================================================
+
+
+function playerAnswer(answer){
+
+
+
+let q=
+window.currentCpuQuestion;
+
+
+
+// CPUの候補を削除
+
+cpuCandidates =
+cpuCandidates.filter(num=>{
+
+
+    return q.check(num)===answer;
+
+
+});
+
+
+
+let result =
+q.text+
+"<br>答え："+
+(answer?"Yes":"No");
+
+
+history.push(
+"コンピューター: "+result
+);
+
+
+cpuHistory.push(result);
+
+saveCpuQuestion(q,answer);
+
+
+// 候補0個なら矛盾
+
+if(cpuCandidates.length===0){
+
+    contradictionScreen();
+
+    return;
+
+}
+
+
+
+
+showPlayerTurn();
+
+
+}
+
+
+
+
+
+
+// =================================================
+// CPUチャレンジ
+// =================================================
+
+
+function cpuChallenge(){
+
+
+let guess=
+cpuCandidates[0];
+
+
+
+endGame(false,guess);
+
+
+}
+
+
+
+
+
+
+// =================================================
+// プレイヤーチャレンジ
+// =================================================
+
+
+function playerChallenge(){
+
+
+let input=
+document.getElementById(
+"challengeInput"
+);
+
+
+let guess=
+Number(input.value);
+
+
+
+if(
+guess<1 ||
+guess>99 ||
+!Number.isInteger(guess)
+){
+
+    alert("1～99の数字を入力してください");
+
+    return;
+
+}
+
+
+
+if(guess===cpuNumber){
+
+
+    endGame(true,guess);
+
+
+}
+else{
+
+
+history.push(
+"あなた: "+guess+" と予想 → 不正解"
+);
+
+
+
+showCpuTurnAfterMiss();
+
+
+}
+
+
+
+}
+
+
+
+
+
+
+// =================================================
+// プレイヤーチャレンジ失敗後
+// =================================================
+
+
+function showCpuTurnAfterMiss(){
+
+
+document.getElementById("screen").innerHTML=`
+
+<h2>不正解</h2>
+
+
+<p>
+コンピューターの数字ではありません。
+</p>
+
+
+<button onclick="cpuTurn()">
+次へ
+</button>
+
+`;
+
+}
+
+
+
+
+
+// =================================================
+// 矛盾発生画面
+// =================================================
+
+
+function contradictionScreen(){
+
+
+document.getElementById("screen").innerHTML=`
+
+<h2>矛盾が発生しました</h2>
+
+
+<p>
+あなたの数字を入力してください
+</p>
+
+
+<input id="realNumber"
+type="number"
+min="1"
+max="99">
+
+
+<br>
+
+
+<button onclick="checkContradiction()">
+確認
+</button>
+
+
+`;
+
+}
+
+
+
+
+
+// =================================================
+// 矛盾確認
+// =================================================
+
+
+function checkContradiction(){
+
+
+let num=
+Number(
+document.getElementById("realNumber").value
+);
+
+
+
+if(
+num<1 ||
+num>99 ||
+!Number.isInteger(num)
+){
+
+alert("1～99を入力してください");
+
+return;
+
+}
+
+
+
+playerNumber=num;
+
+
+
+let errors=[];
+
+
+
+history.forEach(record=>{
+
+
+});
+
+
+
+// CPUが保存している質問履歴から確認
+
+cpuQuestionHistory.forEach(item=>{
+
+
+if(
+item.question.check(num)
+!==item.answer
+){
+
+errors.push(
+item.question.text+
+" → 回答:"+
+(item.answer?"Yes":"No")
+);
+
+}
+
+
+});
+
+
+
+showContradictionResult(errors);
+
+
+}
+
+
+
+
+
+
+// =================================================
+// CPU質問履歴保存用
+// =================================================
+
+
+let cpuQuestionHistory=[];
+
+
+
+
+
+
+// =================================================
+// CPU回答結果保存処理を追加
+// =================================================
+
+
+// 既存 playerAnswer の最後に追加したい処理ですが、
+// 分かりやすさのため関数で管理します
+
+
+function saveCpuQuestion(q,answer){
+
+cpuQuestionHistory.push({
+
+question:q,
+
+answer:answer
+
+});
+
+}
+
+/////////////////
+
+
+// =================================================
+// 矛盾結果表示
+// =================================================
+
+function showContradictionResult(errors){
+
+
+let html=`
+
+<h2>あなたの敗北です</h2>
+
+
+<p>
+入力された数字では、過去の回答と矛盾します。
+</p>
+
+
+<h3>矛盾していた質問</h3>
+
+`;
+
+
+
+if(errors.length===0){
+
+    html+=`
+    <p>
+    矛盾した質問を特定できませんでした。
+    </p>
+    `;
+
+}
+else{
+
+
+errors.forEach(e=>{
+
+    html+=`
+    <p>
+    ${e}
+    </p>
+    `;
+
+});
+
+
+}
+
+
+
+html+=`
+
+<hr>
+
+<p>
+あなたの数字：${playerNumber}
+</p>
+
+<p>
+コンピューターの数字：${cpuNumber}
+</p>
+
+
+<button onclick="startScreen()">
+もう一度遊ぶ
+</button>
+
+`;
+
+
+
+document.getElementById("screen").innerHTML=html;
+
+
+}
+
+
+
+
+
+
+
+// =================================================
+// ゲーム終了処理
+//
+// playerWin:
+// true  → プレイヤー勝利
+// false → CPU勝利
+//
+// guess:
+// 当てた数字
+// =================================================
+
+
+function endGame(playerWin,guess){
+
+
+
+let html="";
+
+
+
+if(playerWin){
+
+
+html+=`
+
+<h1>あなたの勝利！</h1>
+
+
+<p>
+あなたはコンピューターの数字を当てました。
+</p>
+
+
+<p>
+コンピューターの数字：
+${cpuNumber}
+</p>
+
+
+
+
+
+`;
+
+
+
+}
+else{
+
+
+// CPU勝利の場合
+
+// CPUが推理成功した場合
+// またはチャレンジ成功
+
+
+html+=`
+
+<h1>あなたの敗北です</h1>
+
+
+<p>
+コンピューターがあなたの数字を当てました。
+</p>
+
+
+<p>
+あなたの数字：
+${cpuCandidates[0]}
+</p>
+
+
+<p>
+コンピューターの数字：
+${cpuNumber}
+</p>
+
+
+`;
+
+
+
+}
+
+
+
+html+=`
+
+<h2>質問履歴</h2>
+
+
+<div class="history-container">
+
+
+<div class="history-box">
+
+<div class="history-title">
+あなたの質問
+</div>
+
+
+${playerHistory.join("<hr>")}
+
+
+</div>
+
+
+
+<div class="history-box">
+
+<div class="history-title">
+コンピューターの質問
+</div>
+
+
+${cpuHistory.join("<hr>")}
+
+
+</div>
+
+
+</div>
+
+
+<br>
+
+
+<button onclick="startScreen()">
+もう一度遊ぶ
+</button>
+
+
+`;
+
+
+
+document.getElementById("screen").innerHTML=html;
+
+
+}
+
+
+
+
+
+// =================================================
+// 素数判定
+// =================================================
+
+
+function isPrime(num){
+
+
+if(num<2){
+    return false;
+}
+
+
+for(let i=2;i<=Math.sqrt(num);i++){
+
+    if(num%i===0){
+        return false;
+    }
+
+}
+
+
+return true;
+
+
+}
+
+
+
+function getCpuThinkingRate(){
+
+
+    let remaining =
+    cpuCandidates.length;
+
+
+    let rate =
+    100 -
+    (
+        Math.log(remaining)
+        /
+        Math.log(99)
+        *
+        100
+    );
+
+
+    return Math.floor(rate);
+
+}
+
+</script>
+</body>
+</html>
