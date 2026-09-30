@@ -1,0 +1,581 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Janken Color Quiz</title>
+  <style>
+    :root {
+      --bg1: #0f172a;
+      --bg2: #111827;
+      --panel: rgba(15, 23, 42, 0.82);
+      --panel2: rgba(148, 163, 184, 0.08);
+      --text: #e2e8f0;
+      --muted: #94a3b8;
+      --button: #38bdf8;
+      --button2: #a78bfa;
+      --rock: #60a5fa;
+      --scissors: #f87171;
+      --paper: #4ade80;
+      --grid: rgba(148, 163, 184, 0.18);
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      display: grid;
+      place-items: center;
+      font-family: "Segoe UI", "Hiragino Kaku Gothic ProN", sans-serif;
+      background: linear-gradient(135deg, var(--bg1), var(--bg2));
+      color: var(--text);
+    }
+
+    .app {
+      width: min(94vw, 1000px);
+      background: var(--panel);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 24px;
+      box-shadow: 0 20px 50px rgba(0,0,0,0.35);
+      padding: 20px;
+    }
+
+    h1 {
+      margin: 0 0 8px;
+      text-align: center;
+      font-size: clamp(2rem, 4vw, 3rem);
+      letter-spacing: 0.08em;
+    }
+
+    .subtitle {
+      margin: 0 0 18px;
+      text-align: center;
+      color: var(--muted);
+      font-size: 0.95rem;
+    }
+
+    .controls {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 12px;
+      margin-bottom: 18px;
+    }
+
+    button {
+      border: none;
+      border-radius: 12px;
+      padding: 10px 18px;
+      font-size: 0.95rem;
+      font-weight: 700;
+      cursor: pointer;
+      color: white;
+      background: linear-gradient(135deg, var(--button), var(--button2));
+      box-shadow: 0 8px 18px rgba(56, 189, 248, 0.2);
+      transition: transform 0.12s ease, opacity 0.12s ease;
+    }
+
+    button:hover { transform: translateY(-1px); }
+    button:active { transform: translateY(0); }
+
+    .panel {
+      background: rgba(255,255,255,0.03);
+      border: 1px solid rgba(255,255,255,0.06);
+      border-radius: 18px;
+      padding: 12px 14px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 14px;
+      flex-wrap: wrap;
+      margin-bottom: 18px;
+    }
+
+    .swatches {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+
+    .swatch {
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      border: 2px solid rgba(255,255,255,0.8);
+      cursor: pointer;
+      box-shadow: 0 0 0 2px rgba(255,255,255,0.08);
+    }
+
+    .swatch.active {
+      outline: 2px solid white;
+      outline-offset: 2px;
+    }
+
+    label {
+      color: var(--muted);
+      font-size: 0.9rem;
+    }
+
+    input[type="range"] {
+      width: 180px;
+      accent-color: var(--button);
+    }
+
+    .stats {
+      display: flex;
+      justify-content: center;
+      gap: 14px;
+      flex-wrap: wrap;
+      margin-bottom: 18px;
+      color: var(--muted);
+      font-size: 0.9rem;
+    }
+
+    .stat-box {
+      background: var(--panel2);
+      border: 1px solid rgba(255,255,255,0.06);
+      border-radius: 10px;
+      padding: 8px 12px;
+    }
+
+    canvas {
+      display: block;
+      width: min(100%, 860px);
+      height: auto;
+      background: rgba(15, 23, 42, 0.9);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 18px;
+      margin: 0 auto;
+      cursor: crosshair;
+      touch-action: none;
+    }
+
+    .legend {
+      margin-top: 12px;
+      text-align: center;
+      color: var(--muted);
+      font-size: 0.9rem;
+    }
+
+    .rulebox {
+      margin-top: 18px;
+      background: rgba(255,255,255,0.03);
+      border: 1px solid rgba(255,255,255,0.06);
+      border-radius: 18px;
+      padding: 16px 18px;
+      color: var(--text);
+    }
+
+    .rulebox h2 {
+      margin: 0 0 12px;
+      font-size: 1.05rem;
+      text-align: center;
+    }
+
+    .rules {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 12px;
+      color: var(--muted);
+      font-size: 0.95rem;
+      line-height: 1.6;
+    }
+
+    .rule-card {
+      background: rgba(255,255,255,0.02);
+      border: 1px solid rgba(255,255,255,0.05);
+      border-radius: 12px;
+      padding: 12px;
+    }
+
+    .rule-card strong {
+      color: var(--text);
+    }
+
+    .color-pill {
+      display: inline-block;
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      vertical-align: middle;
+      margin-right: 8px;
+      border: 2px solid rgba(255,255,255,0.8);
+    }
+
+    @media (max-width: 640px) {
+      .app { padding: 16px; }
+      .panel { flex-direction: column; }
+    }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <h1>Janken Color Quiz</h1>
+    <p class="subtitle">中心と上下左右の5マスでじゃんけんし、勝った属性が次世代へ伝わる</p>
+
+    <div class="controls">
+      <button id="toggleBtn">開始</button>
+      <button id="stepBtn">1ステップ進める</button>
+      <button id="randomBtn">ランダム生成</button>
+      <button id="clearBtn">クリア</button>
+    </div>
+
+    <div class="panel">
+      <label>色を選ぶ</label>
+      <div class="swatches">
+        <div class="swatch active" data-color="0" style="background: var(--rock);" title="グー: 青"></div>
+        <div class="swatch" data-color="1" style="background: var(--scissors);" title="チョキ: 赤"></div>
+        <div class="swatch" data-color="2" style="background: var(--paper);" title="パー: 緑"></div>
+      </div>
+      <label for="speedRange">速度</label>
+      <input id="speedRange" type="range" min="1" max="20" value="8" />
+    </div>
+
+    <div class="stats">
+      <div class="stat-box">世代: <span id="generation">0</span></div>
+      <div class="stat-box">青: <span id="rockCount">0</span></div>
+      <div class="stat-box">赤: <span id="scissorsCount">0</span></div>
+      <div class="stat-box">緑: <span id="paperCount">0</span></div>
+    </div>
+
+    <canvas id="lifeCanvas" width="840" height="500"></canvas>
+    <div class="legend">長押しで線を描けます。色の選択と説明はここで確認できます。</div>
+
+    <div class="rulebox">
+      <h2>ルール説明</h2>
+      <div class="rules">
+        <div class="rule-card">
+          <div><span class="color-pill" style="background: #60a5fa;"></span><strong>青</strong> = グー</div>
+          <div><span class="color-pill" style="background: #f87171;"></span><strong>赤</strong> = チョキ</div>
+          <div><span class="color-pill" style="background: #4ade80;"></span><strong>緑</strong> = パー</div>
+        </div>
+
+        <div class="rule-card">
+          <strong>勝敗の判定</strong><br>
+          グー ＞ チョキ<br>
+          チョキ ＞ パー<br>
+          パー ＞ グー<br>
+          同じ手ならあいこ
+        </div>
+
+        <div class="rule-card">
+          <strong>次世代の変化</strong><br>
+          各マスは中心と上下左右の5マスを1回のじゃんけんとして見ます。<br>
+          含まれる色の組み合わせで勝敗を決め、同じ色だけ、または3色すべてならあいこです。<br>
+          あいこの場合はそのマスをそのまま維持します。<br>
+          これを各マスで繰り返して進化させます。
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const canvas = document.getElementById("lifeCanvas");
+    const ctx = canvas.getContext("2d");
+    const toggleBtn = document.getElementById("toggleBtn");
+    const stepBtn = document.getElementById("stepBtn");
+    const randomBtn = document.getElementById("randomBtn");
+    const clearBtn = document.getElementById("clearBtn");
+    const speedRange = document.getElementById("speedRange");
+    const generationEl = document.getElementById("generation");
+    const rockCountEl = document.getElementById("rockCount");
+    const scissorsCountEl = document.getElementById("scissorsCount");
+    const paperCountEl = document.getElementById("paperCount");
+    const swatches = [...document.querySelectorAll(".swatch")];
+
+    const ROCK = 0;
+    const SCISSORS = 1;
+    const PAPER = 2;
+    const COLORS = ["#60a5fa", "#f87171", "#4ade80"];
+    const LABELS = ["グー", "チョキ", "パー"];
+
+    const cols = 70;
+    const rows = 42;
+    const cellSize = canvas.width / cols;
+
+    let grid = createEmptyGrid();
+    let running = false;
+    let generation = 0;
+    let tickTimer = null;
+    let brushColor = ROCK;
+    let drawing = false;
+    let lastPaintedCell = null;
+
+    function createEmptyGrid() {
+      return Array.from({ length: rows }, () => Array(cols).fill(ROCK));
+    }
+
+    function randomizeGrid() {
+      const seeds = [];
+      const clusterCountPerColor = 4;
+
+      for (const color of [ROCK, SCISSORS, PAPER]) {
+        for (let i = 0; i < clusterCountPerColor; i++) {
+          seeds.push({
+            color,
+            x: Math.random() * cols,
+            y: Math.random() * rows
+          });
+        }
+      }
+
+      grid = Array.from({ length: rows }, () => Array(cols).fill(ROCK));
+
+      for (let y = 0; y < rows; y++) {
+        for (let x = 0; x < cols; x++) {
+          let bestColor = ROCK;
+          let bestDistanceSq = Number.POSITIVE_INFINITY;
+
+          for (const seed of seeds) {
+            const dx = x - seed.x;
+            const dy = y - seed.y;
+            const distanceSq = dx * dx + dy * dy;
+
+            if (distanceSq < bestDistanceSq) {
+              bestDistanceSq = distanceSq;
+              bestColor = seed.color;
+            }
+          }
+
+          grid[y][x] = bestColor;
+        }
+      }
+
+      generation = 0;
+      updateStats();
+      draw();
+    }
+
+    function clearGrid() {
+      grid = createEmptyGrid();
+      generation = 0;
+      running = false;
+      toggleBtn.textContent = "開始";
+      clearInterval(tickTimer);
+      tickTimer = null;
+      updateStats();
+      draw();
+    }
+
+    function getNeighborhoodCells(x, y) {
+      return [
+        { x, y },
+        { x, y: (y - 1 + rows) % rows },
+        { x, y: (y + 1) % rows },
+        { x: (x - 1 + cols) % cols, y },
+        { x: (x + 1) % cols, y }
+      ];
+    }
+
+    function determineNextCellType(x, y) {
+      const cells = getNeighborhoodCells(x, y);
+      const presentTypes = new Set();
+
+      for (const cell of cells) {
+        presentTypes.add(grid[cell.y][cell.x]);
+      }
+
+      const types = [...presentTypes];
+
+      if (types.length === 3 || types.length === 1) {
+        return grid[y][x];
+      }
+
+      if (types.includes(ROCK) && types.includes(SCISSORS)) {
+        return ROCK;
+      }
+
+      if (types.includes(SCISSORS) && types.includes(PAPER)) {
+        return SCISSORS;
+      }
+
+      if (types.includes(PAPER) && types.includes(ROCK)) {
+        return PAPER;
+      }
+
+      return grid[y][x];
+    }
+
+    function nextGeneration() {
+      const next = createEmptyGrid();
+      for (let y = 0; y < rows; y++) {
+        for (let x = 0; x < cols; x++) {
+          next[y][x] = determineNextCellType(x, y);
+        }
+      }
+
+      grid = next;
+      generation += 1;
+      updateStats();
+      draw();
+    }
+
+    function updateStats() {
+      generationEl.textContent = generation;
+      rockCountEl.textContent = countType(ROCK);
+      scissorsCountEl.textContent = countType(SCISSORS);
+      paperCountEl.textContent = countType(PAPER);
+    }
+
+    function countType(type) {
+      let total = 0;
+      for (let y = 0; y < rows; y++) {
+        for (let x = 0; x < cols; x++) {
+          if (grid[y][x] === type) total += 1;
+        }
+      }
+      return total;
+    }
+
+    function drawGrid() {
+      ctx.fillStyle = "#0f172a";
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+      for (let y = 0; y < rows; y++) {
+        for (let x = 0; x < cols; x++) {
+          const type = grid[y][x];
+          ctx.fillStyle = COLORS[type];
+          ctx.fillRect(x * cellSize, y * cellSize, cellSize, cellSize);
+        }
+      }
+
+      ctx.strokeStyle = "rgba(148, 163, 184, 0.18)";
+      ctx.lineWidth = 1;
+      for (let x = 0; x <= cols; x++) {
+        ctx.beginPath();
+        ctx.moveTo(x * cellSize + 0.5, 0);
+        ctx.lineTo(x * cellSize + 0.5, canvas.height);
+        ctx.stroke();
+      }
+      for (let y = 0; y <= rows; y++) {
+        ctx.beginPath();
+        ctx.moveTo(0, y * cellSize + 0.5);
+        ctx.lineTo(canvas.width, y * cellSize + 0.5);
+        ctx.stroke();
+      }
+    }
+
+    function draw() {
+      drawGrid();
+    }
+
+    function toggleRunning() {
+      running = !running;
+      toggleBtn.textContent = running ? "停止" : "開始";
+
+      if (running) {
+        const speed = Number(speedRange.value);
+        const delay = Math.max(40, 220 - speed * 10);
+        tickTimer = setInterval(nextGeneration, delay);
+      } else {
+        clearInterval(tickTimer);
+        tickTimer = null;
+      }
+    }
+
+    function handleSpeedChange() {
+      if (running) {
+        clearInterval(tickTimer);
+        const speed = Number(speedRange.value);
+        const delay = Math.max(40, 220 - speed * 10);
+        tickTimer = setInterval(nextGeneration, delay);
+      }
+    }
+
+    function getCellFromEvent(event) {
+      const rect = canvas.getBoundingClientRect();
+      const scaleX = canvas.width / rect.width;
+      const scaleY = canvas.height / rect.height;
+      const x = Math.floor((event.clientX - rect.left) * scaleX / cellSize);
+      const y = Math.floor((event.clientY - rect.top) * scaleY / cellSize);
+      return { x, y };
+    }
+
+    function paintCell(x, y) {
+      for (let offsetY = -1; offsetY <= 1; offsetY++) {
+        for (let offsetX = -1; offsetX <= 1; offsetX++) {
+          const paintX = x + offsetX;
+          const paintY = y + offsetY;
+          if (paintX < 0 || paintY < 0 || paintX >= cols || paintY >= rows) continue;
+          grid[paintY][paintX] = brushColor;
+        }
+      }
+    }
+
+    function drawLine(x1, y1, x2, y2) {
+      const dx = Math.abs(x2 - x1);
+      const dy = Math.abs(y2 - y1);
+      const sx = x1 < x2 ? 1 : -1;
+      const sy = y1 < y2 ? 1 : -1;
+      let err = dx - dy;
+      let x = x1;
+      let y = y1;
+
+      while (true) {
+        paintCell(x, y);
+        if (x === x2 && y === y2) break;
+        const e2 = 2 * err;
+        if (e2 > -dy) {
+          err -= dy;
+          x += sx;
+        }
+        if (e2 < dx) {
+          err += dx;
+          y += sy;
+        }
+      }
+    }
+
+    function handlePointerDown(event) {
+      const { x, y } = getCellFromEvent(event);
+      drawing = true;
+      lastPaintedCell = { x, y };
+      paintCell(x, y);
+      updateStats();
+      draw();
+    }
+
+    function handlePointerMove(event) {
+      if (!drawing) return;
+      const { x, y } = getCellFromEvent(event);
+      if (!lastPaintedCell || lastPaintedCell.x !== x || lastPaintedCell.y !== y) {
+        drawLine(lastPaintedCell ? lastPaintedCell.x : x, lastPaintedCell ? lastPaintedCell.y : y, x, y);
+        lastPaintedCell = { x, y };
+        updateStats();
+        draw();
+      }
+    }
+
+    function stopDrawing() {
+      drawing = false;
+      lastPaintedCell = null;
+    }
+
+    swatches.forEach(swatch => {
+      swatch.addEventListener("click", () => {
+        brushColor = Number(swatch.dataset.color);
+        swatches.forEach(item => item.classList.toggle("active", item === swatch));
+      });
+    });
+
+    toggleBtn.addEventListener("click", toggleRunning);
+    stepBtn.addEventListener("click", () => {
+      if (!running) nextGeneration();
+    });
+    randomBtn.addEventListener("click", randomizeGrid);
+    clearBtn.addEventListener("click", clearGrid);
+    speedRange.addEventListener("input", handleSpeedChange);
+    canvas.addEventListener("pointerdown", handlePointerDown);
+    canvas.addEventListener("pointermove", handlePointerMove);
+    canvas.addEventListener("pointerup", stopDrawing);
+    canvas.addEventListener("pointerleave", stopDrawing);
+    canvas.addEventListener("pointercancel", stopDrawing);
+
+    randomizeGrid();
+    draw();
+  </script>
+</body>
+</html>
