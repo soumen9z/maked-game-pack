@@ -219,6 +219,15 @@
                 options: {
                     responsive: true,
                     maintainAspectRatio: false,
+                    plugins: {
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    return `可能性：${context.parsed.y === 1 ? 'あり' : 'なし'}`;
+                                }
+                            }
+                        }
+                    },
                     scales: {
                         x: {
                             grid: {
@@ -275,6 +284,15 @@
                 options: {
                     responsive: true,
                     maintainAspectRatio: false,
+                    plugins: {
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    return `可能性：${context.parsed.y === 1 ? 'あり' : 'なし'}`;
+                                }
+                            }
+                        }
+                    },
                     scales: {
                         x: {
                             grid: {
