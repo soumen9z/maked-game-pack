@@ -44,6 +44,13 @@
             font-weight: bold;
             color: #333;
         }
+        #myBarChart {
+            width: 100%;
+            height: 220px;
+            max-height: 220px;
+            margin-top: 20px;
+            display: block;
+        }
     </style>
 </head>
 <body>
@@ -171,27 +178,27 @@
         let myChart;
         let chartData = Array(maxNumber).fill(1);
 
+        function getChartBarThickness(maxNumber) {
+            return Math.max(4, Math.min(25, 1200 / maxNumber));
+        }
+
         function createChart() {
 
             const maxNumber = parseInt(
                 document.getElementById('difficulty').value
             );
+            const barThickness = getChartBarThickness(maxNumber);
 
             const labels = [];
             for (let i = 1; i <= maxNumber; i++) {
                 labels.push(i);
             }
 
-            
-
             const ctx = document.getElementById("myBarChart");
 
-
-            // 既存グラフを削除
             if (myChart) {
                 myChart.destroy();
             }
-
 
             myChart = new Chart(ctx, {
 
@@ -204,14 +211,20 @@
                         label: "可能性",
                         data: chartData,
                         backgroundColor: "#cf596d",
-                        barThickness: 5
+                        barThickness: barThickness,
+                        maxBarThickness: barThickness
                     }]
                 },
 
                 options: {
                     responsive: true,
-
+                    maintainAspectRatio: false,
                     scales: {
+                        x: {
+                            grid: {
+                                display: false
+                            }
+                        },
                         y: {
                             beginAtZero: true,
                             ticks: {
@@ -225,27 +238,23 @@
         }
         createChart();
 
-                function createAnswerChart() {
+        function createAnswerChart() {
 
             const maxNumber = parseInt(
                 document.getElementById('difficulty').value
             );
+            const barThickness = getChartBarThickness(maxNumber);
 
             const labels = [];
             for (let i = 1; i <= maxNumber; i++) {
                 labels.push(i);
             }
 
-            
-
             const ctx = document.getElementById("myBarChart");
 
-
-            // 既存グラフを削除
             if (myChart) {
                 myChart.destroy();
             }
-
 
             myChart = new Chart(ctx, {
 
@@ -258,14 +267,20 @@
                         label: "正解",
                         data: chartData,
                         backgroundColor: "orange",
-                        barThickness: 5
+                        barThickness: barThickness,
+                        maxBarThickness: barThickness
                     }]
                 },
 
                 options: {
                     responsive: true,
-
+                    maintainAspectRatio: false,
                     scales: {
+                        x: {
+                            grid: {
+                                display: false
+                            }
+                        },
                         y: {
                             beginAtZero: true,
                             ticks: {
