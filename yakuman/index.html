@@ -1,0 +1,151 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="CPUに作戦を指示して、三人麻雀の役満12種類を集める局数タイムアタック。">
+  <meta name="theme-color" content="#10231e">
+  <title>役満コレクション</title>
+  <link rel="stylesheet" href="style.css">
+  <script src="rules.js" defer></script>
+  <script src="strategy.js" defer></script>
+  <script src="match.js" defer></script>
+  <script src="game.js" defer></script>
+</head>
+<body>
+  <header class="site-header">
+    <div class="shell header-inner">
+      <a class="back-link" href="../index.html">作品一覧</a>
+      <button class="button quiet" type="button" id="help-button">遊び方・ルール</button>
+    </div>
+  </header>
+
+  <main class="shell">
+    <section class="intro" aria-labelledby="title">
+      <div>
+        <h1 id="title">役満<span>コレクション</span></h1>
+        <p>CPUに作戦を指示し、三人麻雀の役満を少ない局数で集めよう。</p>
+      </div>
+      <dl class="metrics">
+        <div><dt>収集済み</dt><dd><span id="total-collected">0</span><small> / <span id="goal-count">12</span></small></dd></div>
+        <div><dt>消化局数</dt><dd><span id="total-rounds">0</span><small> 局</small></dd></div>
+        <div><dt>最少記録</dt><dd><span id="best">—</span><small id="best-unit" hidden> 局</small></dd></div>
+      </dl>
+    </section>
+
+    <div class="workspace">
+      <section class="play-column" aria-label="対局">
+        <div class="panel play-panel">
+          <div class="panel-head">
+            <div>
+              <h2>対局卓</h2>
+              <p class="subtle" id="round-label">第1局 · 東1局</p>
+            </div>
+            <span class="play-status" id="play-status" data-state="ready">開始前</span>
+          </div>
+
+          <section id="chance-panel" class="chance-panel" aria-labelledby="chance-title" hidden>
+            <div class="chance-head">
+              <h3 id="chance-title">役満チャンス</h3>
+              <button id="chance-action" class="button primary" type="button">次へ</button>
+            </div>
+            <p id="chance-note" role="status"></p>
+            <ul id="chance-waits" class="chance-waits" aria-label="役満ごとの待ち牌"></ul>
+          </section>
+
+          <div class="table" id="table" aria-label="三人麻雀の卓">
+            <div class="opponents">
+              <section class="seat" id="seat-1" aria-label="CPU 1"></section>
+              <section class="seat" id="seat-2" aria-label="CPU 2"></section>
+            </div>
+            <div class="table-center">
+              <dl class="table-info">
+                <div><dt>牌山</dt><dd id="wall-count">—</dd></div>
+                <div><dt>ドラ表示</dt><dd class="tiles" id="dora-tiles">—</dd></div>
+                <div><dt>供託</dt><dd id="riichi-pot">0</dd></div>
+              </dl>
+              <p class="table-message" id="table-message">作戦を選び、対局を開始してください。</p>
+            </div>
+            <section class="seat focus-seat" id="seat-0" aria-label="指令CPU"></section>
+          </div>
+
+          <div id="completion" class="completion" role="status" hidden></div>
+          <div class="controls">
+            <button class="button primary" id="play-button" type="button">対局開始</button>
+            <button class="button secondary" id="one-round" type="button">1局進める</button>
+            <label class="speed-label" for="speed">進行速度</label>
+            <select id="speed">
+              <option value="watch">観戦</option>
+              <option value="fast" selected>高速</option>
+              <option value="batch">最速（局まとめ）</option>
+            </select>
+          </div>
+          <div class="play-options">
+            <label class="check-row"><input id="highlight-chance" type="checkbox"> 役満チャンスを強調</label>
+            <label class="check-row"><input id="skip-impossible" type="checkbox"> 未収集の役満がすべて成立不能なら局をスキップ</label>
+          </div>
+        </div>
+
+        <section class="panel history" aria-labelledby="history-title">
+          <div class="panel-head">
+            <div><h2 id="history-title">対局履歴</h2><p class="subtle">直近12局</p></div>
+            <button class="button quiet" type="button" id="reset-button">新しい挑戦</button>
+          </div>
+          <ol id="history-list" class="history-list"></ol>
+          <p id="empty-history" class="subtle empty-history">対局が終わると結果が表示されます。</p>
+        </section>
+      </section>
+
+      <aside class="panel strategy" aria-labelledby="strategy-title">
+        <div class="panel-head">
+          <div><h2 id="strategy-title">CPUへの指示</h2><p class="subtle">作戦は次の配牌から反映されます。</p></div>
+        </div>
+        <div class="settings">
+          <div class="setting-row"><label for="calls">鳴き</label><select id="calls"><option value="allow">役満に近づくなら鳴く</option><option value="closed">門前を維持</option></select></div>
+          <div class="setting-row"><label for="defense">打牌方針</label><select id="defense"><option value="attack">役満を優先</option><option value="safe">対リーチの安全も考慮</option></select></div>
+          <label class="check-row"><input id="skip" type="checkbox" checked> 収集済みの役満は狙わない</label>
+        </div>
+        <div class="collection-head">
+          <div><h3>役満の優先順位と開始条件</h3><p class="subtle">上の役満を優先。チェックで開始条件を有効にします。</p></div>
+          <button class="button quiet" id="select-all" type="button">全選択</button>
+        </div>
+        <p class="strategy-note" id="strategy-note" hidden></p>
+        <ol id="targets" class="targets"></ol>
+        <p class="subtle table-mode" id="table-mode"></p>
+      </aside>
+    </div>
+  </main>
+
+  <dialog id="help-dialog" aria-labelledby="help-title">
+    <div class="dialog-head"><h2 id="help-title">遊び方・ルール</h2><form method="dialog"><button class="button quiet" type="submit">閉じる</button></form></div>
+    <ol class="instructions">
+      <li>狙いたい役満にチェックを入れ、開始条件の数字を設定します。0にした項目は常に条件を満たします。天和・地和は配牌や初ツモで自動判定します。</li>
+      <li>指令CPUは配牌とツモのたびに手牌を確認し、条件を満たした役満をその局の候補に加えます。候補が複数あれば、成立可能な役の中から優先順位が最も高い役を選びます。</li>
+      <li>「対局開始」でCPU3人が自動で打ちます。残る2人は、手を進めながら通常役やドラで得点を狙います。</li>
+      <li>条件を満たした候補がなければ、成立可能な未収集の役満のうち、優先順位が最も高い役を狙います。このときはチェックを外した役も対象です。天和・地和は引き続き自動判定です。</li>
+      <li>収集が12種類に達すると終了し、消化局数を記録します。局の結果と作戦はこのブラウザーに保存され、ページを開き直すと次の配牌から再開できます。</li>
+    </ol>
+    <h3>進行速度とスキップ</h3>
+    <p>「最速（局まとめ）」では打牌間の待ち時間なしで進行します。スキップを有効にすると、公開された牌や残り巡目から未収集の役満がすべて成立不能と判断した時点で局を終えます。スキップした局も1局として数え、点棒と供託を引き継いで親を交代します。</p>
+    <h3>役満チャンスの強調</h3>
+    <p>オンにすると、指令CPUがあと1枚で未収集の役満を和了できるときに、役満名と待ち牌を表示して止まります。「次へ」でCPUの手番を1手進め、和了または成立不能の表示で「OK」を押すと元の進行に戻ります。</p>
+    <p>天和・地和は予定の初ツモが当たりなら必ず表示し、外れは間引きます。通常卓では表示時の期待度を約25%に調整します。収集卓ではもともとの当たり率が高いため、外れの約4分の1を省きます。地和の先読みには他家の鳴きを含めません。</p>
+    <p>四槓子のチャンスは、指令CPU自身が4回カンし、和了牌を待つ形になったときに表示します。</p>
+    <h3>卓の種類</h3>
+    <p>収集卓では、選択中の役満とは無関係に、役満に近い配牌や序盤のツモが時々来ます。通常卓では毎局、全牌をシャッフルします。最少記録は卓ごとに保存します。</p>
+    <h3>このゲームの三人麻雀</h3>
+    <p>二萬〜八萬を除く108枚で、ポン・カン・リーチ・ロン・ツモを使用。北は風牌として扱い、赤ドラや北抜きは省略します。ツモ損あり。複合役満は加算し、特殊な待ちや数え役満は図鑑の別項目に含めません。</p>
+    <p>親は和了か流局時のテンパイで連荘します。同時ロンは放銃者の下家から手番順に優先します。途中流局・責任払い・トビ終了は省略します。</p>
+    <details class="help-goals"><summary>収集する役満の条件</summary><dl id="help-goals"></dl></details>
+  </dialog>
+
+  <dialog id="reset-dialog" aria-labelledby="reset-title">
+    <form method="dialog">
+      <h2 id="reset-title">新しい挑戦</h2>
+      <p>局数・収集状況・対局履歴を初期化します。作戦と最少記録は引き継ぎます。</p>
+      <div class="setting-row"><label for="new-mode">卓の種類</label><select id="new-mode"><option value="collection">収集卓</option><option value="standard">通常卓</option></select></div>
+      <div class="dialog-actions"><button class="button secondary" value="cancel" autofocus>キャンセル</button><button class="button primary" value="reset">挑戦を始める</button></div>
+    </form>
+  </dialog>
+</body>
+</html>
