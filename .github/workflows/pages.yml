@@ -1,0 +1,43 @@
+name: GitHub Pages を更新
+
+on:
+  push:
+    branches: [main2]
+  schedule:
+    - cron: '17 0,6,12,18 * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: github-pages
+  cancel-in-progress: false
+
+jobs:
+  publish:
+    if: github.ref_name == github.event.repository.default_branch
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-node@v6
+        with:
+          node-version: '22'
+      - uses: actions/configure-pages@v5
+      - name: 既存のページとメニュー一覧を準備
+        run: |
+          set -o pipefail
+          mkdir _site
+          git archive HEAD -- . ':!limited-menu' ':!.github' | tar -x -C _site
+          touch _site/.nojekyll
+          node limited-menu/update.mjs _site/limited-menu
+      - uses: actions/upload-pages-artifact@v4
+        with:
+          path: _site
+      - id: deployment
+        uses: actions/deploy-pages@v4

@@ -1,0 +1,29 @@
+
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="外食チェーン7社の期間限定メニューを公式情報からチェック。">
+  <title>今だけメニュー</title>
+  <link rel="stylesheet" href="./style.css">
+  <script type="module" src="./app.js"></script>
+</head>
+<body>
+  <header class="masthead"><div class="wrap bar"><a class="brand" href="./">今だけ<span>メニュー</span></a><span class="bar-caption">外食チェーン7社</span></div></header>
+  <main class="wrap">
+    <section class="hero" aria-labelledby="title">
+      <div><h1 id="title">今日の<br>期間限定メニュー</h1>
+      <p>すき家、かつや、マクドナルドなど、7チェーンの期間限定メニュー。</p></div>
+      <div class="freshness"><span id="clock" role="status">メニュー一覧を読み込み中</span></div>
+    </section>
+    <section class="catalog" aria-label="メニュー一覧">
+      <div id="filters" class="filters" role="group" aria-label="チェーンで絞り込む"></div>
+      <p id="summary" role="status"></p>
+      <div id="results" aria-busy="true"></div>
+    </section>
+    <footer>価格や取り扱いは店舗によって異なります。売り切れや早期終了は、各店舗や公式サイトでご確認ください。</footer>
+    <noscript>メニュー一覧を表示するには JavaScript を有効にしてください。</noscript>
+  </main>
+</body>
+</html>
