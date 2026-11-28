@@ -1,0 +1,336 @@
+{
+  "checkedAt": "2026-11-28T10:21:46.950Z",
+  "chains": [
+    {
+      "id": "sukiya",
+      "official": "https://www.sukiya.jp/",
+      "status": "ok",
+      "items": [
+        {
+          "name": "白髪ねぎ牛丼",
+          "price": "",
+          "url": "https://news.sukiya.jp/special/shiraga202611/index.html",
+          "image": "https://www.sukiya.jp/assets/img/top/banner/banner_shiraga_261125.png",
+          "startsAt": "2026-11-25T00:00:00.000Z"
+        },
+        {
+          "name": "食べラー白髪ねぎ牛丼",
+          "price": "",
+          "url": "https://news.sukiya.jp/special/shiraga202611/index.html",
+          "image": "https://www.sukiya.jp/assets/img/top/banner/banner_shiraga_261125.png",
+          "startsAt": "2026-11-25T00:00:00.000Z"
+        },
+        {
+          "name": "ねぎ塩豚タン丼",
+          "price": "",
+          "url": "https://news.sukiya.jp/special/negishio202611/index.html",
+          "image": "https://www.sukiya.jp/assets/img/top/banner/banner_tontanCM_261120.png",
+          "startsAt": "2026-11-20T00:00:00.000Z"
+        },
+        {
+          "name": "Sukiシェイク 塩バターキャラメル",
+          "price": "",
+          "url": "https://www.sukiya.jp/menu/in/drink/809200/index.html",
+          "image": "https://www.sukiya.jp/assets/img/top/banner/banner_sukishakecaramel_261117.png",
+          "startsAt": "2026-11-17T00:00:00.000Z"
+        },
+        {
+          "name": "牛すき鍋定食",
+          "price": "",
+          "url": "https://news.sukiya.jp/special/nabe202610/index.html",
+          "image": "https://www.sukiya.jp/assets/img/top/banner/banner_sukinabe_261027.png",
+          "startsAt": "2026-10-27T00:00:00.000Z"
+        },
+        {
+          "name": "牛・胡麻麻辣湯鍋定食",
+          "price": "",
+          "url": "https://news.sukiya.jp/special/nabe202610/index.html",
+          "image": "https://www.sukiya.jp/assets/img/top/banner/banner_sukinabe_261027.png",
+          "startsAt": "2026-10-27T00:00:00.000Z"
+        }
+      ]
+    },
+    {
+      "id": "katsuya",
+      "official": "https://www.arclandservice.co.jp/katsuya/menu/",
+      "status": "ok",
+      "items": [
+        {
+          "name": "黒の肉盛り丼",
+          "price": "869円",
+          "url": "https://www.arclandservice.co.jp/katsuya/menu/23780/?identifier=",
+          "image": "https://www.arclandservice.co.jp/katsuya/wp-content/themes/arclandservice-group/assets/img/katsuya/menu/black-fly-don.jpg",
+          "note": "一部店舗を除く"
+        },
+        {
+          "name": "黒の肉盛り丼弁当",
+          "price": "869円",
+          "url": "https://www.arclandservice.co.jp/katsuya/menu/23781/?identifier=",
+          "image": "https://www.arclandservice.co.jp/katsuya/wp-content/themes/arclandservice-group/assets/img/katsuya/menu/TO-black-fly-don.jpg",
+          "note": "持ち帰り"
+        },
+        {
+          "name": "あいがけ洋風カツライス",
+          "price": "869円",
+          "url": "https://www.arclandservice.co.jp/katsuya/menu/22451/?identifier=",
+          "image": "https://www.arclandservice.co.jp/katsuya/wp-content/themes/arclandservice-group/assets/img/katsuya/menu/261106-katsu-rice.jpg",
+          "note": "一部店舗を除く"
+        }
+      ]
+    },
+    {
+      "id": "mcd",
+      "official": "https://www.mcdonalds.co.jp/menu/",
+      "status": "ok",
+      "items": [
+        {
+          "name": "シャカシャカポテト® ビーフガーリック醤油味シーズニング",
+          "price": "50円〜",
+          "url": "https://www.mcdonalds.co.jp/products/6530/",
+          "image": "https://www.mcdonalds.co.jp/product_images/3959/2108.png?20261124135942",
+          "startsAt": "2026-11-17T15:00:00.000Z"
+        },
+        {
+          "name": "チキンマックナゲット® 15ピース",
+          "price": "490円〜",
+          "url": "https://www.mcdonalds.co.jp/products/9030/",
+          "image": "https://www.mcdonalds.co.jp/product_images/270/9030-chickenmcnuggets15p.png?20261124140102",
+          "startsAt": "2026-11-16T15:00:00.000Z"
+        },
+        {
+          "name": "すきやき風ソース",
+          "price": "50円〜",
+          "url": "https://www.mcdonalds.co.jp/products/1613/",
+          "image": "https://www.mcdonalds.co.jp/product_images/3925/5646.png?20261117135955",
+          "startsAt": "2026-11-09T15:00:00.000Z"
+        },
+        {
+          "name": "芳醇トリュフのチーズソース",
+          "price": "50円〜",
+          "url": "https://www.mcdonalds.co.jp/products/1614/",
+          "image": "https://www.mcdonalds.co.jp/product_images/3926/5645.png?20261117135948",
+          "startsAt": "2026-11-09T15:00:00.000Z"
+        },
+        {
+          "name": "マックフルーリー® ザクザク いちごのミルフィーユ味",
+          "price": "380円〜",
+          "url": "https://www.mcdonalds.co.jp/products/8615/",
+          "image": "https://www.mcdonalds.co.jp/product_images/3921/2451.png?20261117135945",
+          "startsAt": "2026-11-09T15:00:00.000Z"
+        },
+        {
+          "name": "三角チョコパイ 黒",
+          "price": "180円〜",
+          "url": "https://www.mcdonalds.co.jp/products/2520/",
+          "image": "https://www.mcdonalds.co.jp/product_images/3841/2139.png?20261005135911",
+          "startsAt": "2026-09-28T15:00:00.000Z"
+        },
+        {
+          "name": "コク旨ボロネーゼグラコロ",
+          "price": "510円〜",
+          "url": "https://www.mcdonalds.co.jp/products/6510/",
+          "image": "https://www.mcdonalds.co.jp/product_images/3954/1510.png?20261124135937",
+          "startsAt": "2026-11-17T15:00:00.000Z"
+        },
+        {
+          "name": "グラコロ®",
+          "price": "460円〜",
+          "url": "https://www.mcdonalds.co.jp/products/6500/",
+          "image": "https://www.mcdonalds.co.jp/product_images/3950/1517.png?20261124140008",
+          "startsAt": "2026-11-17T15:00:00.000Z"
+        }
+      ]
+    },
+    {
+      "id": "yoshinoya",
+      "official": "https://www.yoshinoya.com/menu/gentei/",
+      "status": "ok",
+      "items": [
+        {
+          "name": "牛スンドゥブチゲ鍋膳",
+          "price": "954円",
+          "url": "https://www.yoshinoya.com/menu/set/gyusundubuchige-nabe-zen/",
+          "image": "https://www.yoshinoya.com/wp-content/uploads/2026/11/13144302/ec692324cc3d729082d440fef3ce87c6-400x400.jpg"
+        },
+        {
+          "name": "牛スンドゥブチゲ鍋（単品）",
+          "price": "844円",
+          "url": "https://www.yoshinoya.com/menu/gentei/gyusundubuchige-nabe-single/",
+          "image": "https://www.yoshinoya.com/wp-content/uploads/2026/11/13145341/559ec97c2945553f0c2c445f72d9dbae-400x400.jpg"
+        },
+        {
+          "name": "牛肉豆腐丼",
+          "price": "649円",
+          "url": "https://www.yoshinoya.com/menu/yoshinoyanodon/gyunikudofu-don/",
+          "image": "https://www.yoshinoya.com/wp-content/uploads/2026/10/20103203/029c387f93a20e8b8d0bd7f592910cf0-400x400.jpg"
+        },
+        {
+          "name": "牛すき鍋膳",
+          "price": "899円",
+          "url": "https://www.yoshinoya.com/menu/set/gyusuki-nabe-zen/",
+          "image": "https://www.yoshinoya.com/wp-content/uploads/2024/09/06102331/d5799974a1eeb9bd67cefebff781c55d-1-400x400.jpg"
+        },
+        {
+          "name": "牛すき鍋（単品）",
+          "price": "789円",
+          "url": "https://www.yoshinoya.com/menu/set/gyusuki-nabe-zen-single/",
+          "image": "https://www.yoshinoya.com/wp-content/uploads/2024/09/06103346/98963e811df15df0f132fb700caa7820-1-400x400.jpg"
+        },
+        {
+          "name": "牛鍋ファミリーパック",
+          "price": "1,095円",
+          "url": "https://www.yoshinoya.com/menu/yoshinomi/gyu-nabe-familypack/",
+          "image": "https://www.yoshinoya.com/wp-content/uploads/2024/09/06104539/3c396ad83a5f25a6b70acd54da9832fe-400x400.jpg"
+        }
+      ]
+    },
+    {
+      "id": "marugame",
+      "official": "https://jp.marugame.com/menu/udon/",
+      "status": "ok",
+      "items": [
+        {
+          "name": "焼き鴨ねぎうどん",
+          "price": "890円",
+          "url": "https://jp.marugame.com/menu/udon/yakikamonegi/",
+          "image": "https://images.microcms-assets.io/assets/58eb40d284924aeb96de2de93fa08d93/72720151691843b09600cb4545fdccbb/udon-yakikamonegi.jpg",
+          "note": "店舗限定"
+        },
+        {
+          "name": "牡蠣たまあんかけうどん",
+          "price": "890円",
+          "url": "https://jp.marugame.com/menu/udon/kakitamaankakeudon/",
+          "image": "https://images.microcms-assets.io/assets/58eb40d284924aeb96de2de93fa08d93/bd3f2aac9c3941b3a17717d66dd4b2ad/udon-kakitama-ankake.jpg",
+          "note": "店舗限定・店内飲食のみ"
+        },
+        {
+          "name": "こく旨牡蠣ぶっかけうどん",
+          "price": "890円",
+          "url": "https://jp.marugame.com/menu/udon/kakibukkakeudon/",
+          "image": "https://images.microcms-assets.io/assets/58eb40d284924aeb96de2de93fa08d93/41855ca5a91549cf8a57050df83a12db/udon-kakibukkakeudon.jpg",
+          "note": "店舗限定・店内飲食のみ"
+        },
+        {
+          "name": "玉子あんかけうどん",
+          "price": "590円",
+          "url": "https://jp.marugame.com/menu/udon/tamagoankakeudon/",
+          "image": "https://images.microcms-assets.io/assets/58eb40d284924aeb96de2de93fa08d93/0927c140f0df486a95e2bb136aa69f84/tamagoankakeudon.jpg",
+          "note": ""
+        },
+        {
+          "name": "明太玉子あんかけうどん",
+          "price": "690円",
+          "url": "https://jp.marugame.com/menu/udon/mentaitamagoankakeudon/",
+          "image": "https://images.microcms-assets.io/assets/58eb40d284924aeb96de2de93fa08d93/be9bec3d2fe34f7284954e43b2a5c916/mentaitamagoankakeudon.jpg",
+          "note": ""
+        },
+        {
+          "name": "旨辛豚つけ汁うどん",
+          "price": "990円",
+          "url": "https://jp.marugame.com/menu/udon/butatsukejiru/",
+          "image": "https://images.microcms-assets.io/assets/58eb40d284924aeb96de2de93fa08d93/4772ed38ffd04d1c9bb699f61cc912d5/udon-butatsukejiru.jpg",
+          "note": "店舗限定・店内飲食のみ"
+        }
+      ]
+    },
+    {
+      "id": "hanamaru",
+      "official": "https://www.hanamaruudon.com/menu/",
+      "status": "ok",
+      "items": [
+        {
+          "name": "鴨ねぎうどん",
+          "price": "890円",
+          "url": "https://www.hanamaruudon.com/menu/campaign.html",
+          "image": "https://www.hanamaruudon.com/assets/img/menu/img_campaign_menu.png??20261128192050",
+          "note": "一部店舗を除く",
+          "startsAt": "2026-10-21T15:00:00.000Z"
+        },
+        {
+          "name": "鴨せいろうどん",
+          "price": "790円",
+          "url": "https://www.hanamaruudon.com/menu/campaign.html",
+          "image": "https://www.hanamaruudon.com/assets/img/menu/img_campaign_menu_02.png??20261128192050",
+          "note": "一部店舗を除く",
+          "startsAt": "2026-10-21T15:00:00.000Z"
+        }
+      ]
+    },
+    {
+      "id": "mos",
+      "official": "https://www.mos.jp/menu/category/?c_id=26",
+      "status": "ok",
+      "items": [
+        {
+          "name": "冬の白いモスバーガー",
+          "price": "590円",
+          "url": "https://www.mos.jp/menu/detail/?menu_id=010552&c_id=26",
+          "image": "https://www.mos.jp/img/menu/010552/010552_5.jpg"
+        },
+        {
+          "name": "ダブル冬の白いモスバーガー",
+          "price": "740円",
+          "url": "https://www.mos.jp/menu/detail/?menu_id=010553&c_id=26",
+          "image": "https://www.mos.jp/img/menu/010553/010553_5.jpg"
+        },
+        {
+          "name": "モスの匠味 黒毛和牛ダブルバーガー ～大葉の香味ソース ゆず皮添え～",
+          "price": "1,180円",
+          "url": "https://www.mos.jp/menu/detail/?menu_id=011577&c_id=26",
+          "image": "https://www.mos.jp/img/menu/011577/011577_5.jpg",
+          "note": "数量限定"
+        },
+        {
+          "name": "【金曜日限定】オニオンフライデーパック",
+          "price": "1,600円",
+          "url": "https://www.mos.jp/menu/detail/?menu_id=211298&c_id=26",
+          "image": "https://www.mos.jp/img/menu/211298/211298_5.jpg",
+          "weekday": "Fri"
+        },
+        {
+          "name": "まぜるシェイク ティラミス",
+          "price": "410円",
+          "url": "https://www.mos.jp/menu/detail/?menu_id=P00070&c_id=26",
+          "image": "https://www.mos.jp/img/menu/P00070/P00070_5.jpg"
+        },
+        {
+          "name": "柚子(ゆず)とはっさくのジンジャーエール",
+          "price": "330円",
+          "url": "https://www.mos.jp/menu/detail/?menu_id=P00069&c_id=26",
+          "image": "https://www.mos.jp/img/menu/P00069/P00069_5.jpg"
+        },
+        {
+          "name": "ブロッコリーと赤インゲン豆のトマトポタージュ",
+          "price": "380円",
+          "url": "https://www.mos.jp/menu/detail/?menu_id=312512&c_id=26",
+          "image": "https://www.mos.jp/img/menu/312512/312512_5.jpg"
+        },
+        {
+          "name": "【イートイン限定】バスクチーズケーキ",
+          "price": "350円",
+          "url": "https://www.mos.jp/menu/detail/?menu_id=685791&c_id=26",
+          "image": "https://www.mos.jp/img/menu/685791/685791_5.jpg"
+        },
+        {
+          "name": "【テイクアウト限定】＜冷凍＞ バスクチーズケーキ",
+          "price": "350円",
+          "url": "https://www.mos.jp/menu/detail/?menu_id=685792&c_id=26",
+          "image": "https://www.mos.jp/img/menu/685792/685792_5.jpg"
+        },
+        {
+          "name": "おしるこ（粒あん）",
+          "price": "440円",
+          "url": "https://www.mos.jp/menu/detail/?menu_id=685902&c_id=26",
+          "image": "https://www.mos.jp/img/menu/685902/685902_5.jpg"
+        },
+        {
+          "name": "【テイクアウト限定】＜冷凍＞香る醤油のローストチキン 〜鹿児島県産 若鶏〜",
+          "price": "690円",
+          "url": "https://www.mos.jp/menu/detail/?menu_id=710169&c_id=26",
+          "image": "https://www.mos.jp/img/menu/710169/710169_5.jpg",
+          "note": "数量限定"
+        }
+      ]
+    }
+  ]
+}
